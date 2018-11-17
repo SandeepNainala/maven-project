@@ -1,541 +1,251 @@
-<!--
-
-    Copyright 2005-2018 The Kuali Foundation
-
-    Licensed under the Educational Community License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-    http://www.opensource.org/licenses/ecl2.php
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
-
-<!--
-  Kuali Rice ArcheType Help
-
-  This is the main maven build file for the project as known as a project object model.
-  See the comments below to understand the major pieces of this pom. Where not commented,
-  see the maven documentation for more information.
--->
-
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <name>The proj Application</name>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>maven</groupId>
-  <artifactId>proj</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>devops</groupId>
+	<artifactId>test</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>test</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty.version>6.1.4</jetty.version>
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<slf4j.version>1.5.10</slf4j.version>
+		<java.version>1.5</java.version>
+		<junit.version>4.8.2</junit.version>
+	</properties>
 
-            <!--allows the supported database to be changed via parameter (ex: oracle to mysql) -->
-    <database.groupId>com.oracle</database.groupId>
-    <database.artifactId>${oracle.jdbc.artifactId}</database.artifactId>
-    <database.version>${oracle.jdbc.version}</database.version>
-    
-        <!--dependency versions -->
-    <jsp-api.version>2.2</jsp-api.version>
-    <junit.version>4.12</junit.version>
-    <oracle.jdbc.version>11.2.0.4</oracle.jdbc.version>
-    <oracle.jdbc.artifactId>ojdbc6</oracle.jdbc.artifactId>
-    <mysql.jdbc.version>5.1.41</mysql.jdbc.version>
-    <mysql.jdbc.artifactId>mysql-connector-java</mysql.jdbc.artifactId>
+	<dependencies>
 
-    <rice.version>2.6.2</rice.version>
-    <servlet-api.version>3.0.1</servlet-api.version>
+		<!-- JSF Dependencies -->
 
-    <!--plugin versions -->
-    <!--
-      It is a good idea to explicitly place plugin version numbers in a build. This makes the build
-      more stable and less dependant on a specific version of maven.
-    -->
-    <plugin.build-helper.version>1.8</plugin.build-helper.version>
-    <plugin.compiler.version>3.2</plugin.compiler.version>
-    <plugin.surefire.version>2.18</plugin.surefire.version>
-    <plugin.failsafe.version>2.18</plugin.failsafe.version>
-    <plugin.war.version>2.5</plugin.war.version>
-    <plugin.jetty.version>9.4.2.v20170220</plugin.jetty.version>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.0</version>
+			<scope>compile</scope>
+		</dependency>
 
-    <!-- other properties -->
-    <jetty.port>8080</jetty.port>
-    <maven.failsafe.skip>true</maven.failsafe.skip>
-    <plugin.compiler.source>1.7</plugin.compiler.source>
-    <plugin.compiler.target>1.7</plugin.compiler.target>
-  </properties>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>2.0.2-b10</version>
+			<scope>compile</scope>
+		</dependency>
 
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
+		<!-- Bean Validation Dependencies -->
 
-    <!--
-      To help manage complex builds, the maven enforcer plugin has many useful rules.
-      This is not configured in this sample pom for simplicity sake.
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<scope>compile</scope>
+		</dependency>
 
-      http://maven.apache.org/plugins/maven-enforcer-plugin/
-    -->
-    <plugins>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.0.0.GA</version>
+			<scope>compile</scope>
+		</dependency>
 
-      <!--
-        Compiler plugin to specify Java source and target versions and encoding
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${plugin.compiler.version}</version>
-        <configuration>
-          <source>${plugin.compiler.source}</source>
-          <target>${plugin.compiler.target}</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
+		<!-- JPA Persistence Dependencies -->
 
-      <!--
-        Using war overlays to extract the web content from the rice web module.
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>${plugin.war.version}</version>
-        <configuration>
-          <overlays>
-            <overlay>
-              <groupId>org.kuali.rice</groupId>
-              <artifactId>rice-web</artifactId>
-              <filtered>false</filtered>
-            </overlay>
-          </overlays>
-        </configuration>
-      </plugin>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>3.6.0.Final</version>
+			<scope>compile</scope>
+		</dependency>
 
-      <!--
-        Adds a new source directory for integration tests.
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>1.8.0.10</version>
+		</dependency>
 
-        In order for the buildhelper plugin to work with eclipse and m2e, an m2e-extra eclipse plugin
-        must be installed called: org.sonatype.m2e.buildhelper. This is the case until the buildhelper plugin
-        directly supports m2e
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.0.Final</version>
+			<scope>compile</scope>
+		</dependency>
 
-        http://stackoverflow.com/questions/8212846/cant-install-eclipse-plugin-m2e-connector-for-build-helper-maven-plugin-0-15-0
-      -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>${plugin.build-helper.version}</version>
-        <executions>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/it/java</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+		<!-- Spring Dependencies -->
 
-      <!--
-        This executes unit tests. These tests are executed by default when the project is built.
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${plugin.surefire.version}</version>
-      </plugin>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<!-- Exclude Commons Logging in favor of SLF4j -->
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-      <!--
-        This allows the application be be launched in a jetty server using a maven command.
-        A tomcat plugin could also be configured and used if desired.
-      -->
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${plugin.jetty.version}</version>
-        <configuration>
-          <webAppConfig>
-            <contextPath>/proj</contextPath>
-            <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-          </webAppConfig>
-          <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-              <port>${jetty.port}</port>
-            </connector>
-          </connectors>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>${database.groupId}</groupId>
-            <artifactId>${database.artifactId}</artifactId>
-            <version>${database.version}</version>
-            <scope>runtime</scope>
-          </dependency>
-        </dependencies>
-      </plugin>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
-    </plugins>
-  </build>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
 
-  <!--
-  This is a profile activate and enables a special build configuration when executing integration tests.
-  The profile is activated by setting the property maven.failsafe.skip to false.
-  -->
-  <profiles>
-    <profile>
-      <id>itests</id>
-      <activation>
-        <property>
-          <name>maven.failsafe.skip</name>
-          <value>false</value>
-        </property>
-      </activation>
-      <properties>
-        <jetty.stop.port>9999</jetty.stop.port>
-      </properties>
-      <build>
-        <plugins>
+		<!-- DB Dependencies -->
 
-          <!--
-            This executes integration tests. These tests are NOT executed by default when the project is built.
-          -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>${plugin.failsafe.version}</version>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <phase>integration-test</phase>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <encoding>${project.build.sourceEncoding}</encoding>
-              <skip>${maven.failsafe.skip}</skip>
-              <failIfNoTests>false</failIfNoTests>
-              <includes>
-                <include>**/*IT.java</include>
-              </includes>
-              <systemPropertyVariables>
-                <test.port>${jetty.port}</test.port>
-              </systemPropertyVariables>
-            </configuration>
-          </plugin>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>20030825.184428</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>20030825.183949</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
-          <!--
-          This configures jetty to startup and shut down for integration tests.  This allows integration
-          tests to call into the application using web requests.
-          A tomcat plugin could also be configured and used if desired.
-          -->
-          <plugin>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-maven-plugin</artifactId>
-            <version>${plugin.jetty.version}</version>
-            <configuration>
-              <webAppConfig>
-                <contextPath>/proj</contextPath>
-                <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-              </webAppConfig>
-              <connectors>
-                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>${jetty.port}</port>
-                </connector>
-              </connectors>
-              <stopKey>stop_jetty</stopKey>
-              <stopPort>${jetty.stop.port}</stopPort>
-            </configuration>
-            <executions>
-              <execution>
-                <id>start-jetty</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-                <configuration>
-                  <scanIntervalSeconds>0</scanIntervalSeconds>
-                  <daemon>true</daemon>
-                </configuration>
-              </execution>
-              <execution>
-                <id>stop-jetty</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <dependency>
-                <groupId>${database.groupId}</groupId>
-                <artifactId>${database.artifactId}</artifactId>
-                <version>${database.version}</version>
-                <scope>runtime</scope>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+		<!-- View Dependencies -->
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
-  <dependencies>
 
-    <!--
-      Kuali Rice libraries
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-      Ideally you only declare the modules of rice you are using.
-      In practice, you may need to declare them all until rice's modularity work is complete.
+		<!-- logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>runtime</scope>
+		</dependency>
 
-      The only modules rice recommends compiling against are api & framework modules.
 
-      It is usually a good idea to list ALL of the third party libraries being directly references in code.
-      This makes it explicit which libraries are being used rather than coming in through a transitive relationship
-      with other libraries. The http://maven.apache.org/plugins/maven-dependency-plugin/ does a pretty good job of
-      finding these missing dependencies.
-    -->
-    <!-- core -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
+	</dependencies>
 
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-web</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- core service -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-service-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-service-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-service-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-core-service-web</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- edl -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-edl-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-edl-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- legacy rice impl module -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- ken -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-ken-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <!-- kew -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-kew-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-kew-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-kew-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- kim (not including kim-ldap support) -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-kim-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-kim-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-kim-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- kns (not including legacy kns) -->
-    <!-- krad -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-krad-app-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-krad-web-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <!-- krms -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-krms-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-krms-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-krms-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- ksb -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-ksb-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-ksb-client-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-ksb-server-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-ksb-web</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- location -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-location-api</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-location-framework</artifactId>
-      <version>${rice.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-location-impl</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-location-web</artifactId>
-      <version>${rice.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- web -->
-    <dependency>
-      <groupId>org.kuali.rice</groupId>
-      <artifactId>rice-web</artifactId>
-      <version>${rice.version}</version>
-      <type>war</type>
-    </dependency>
+	<repositories>
+		<!-- JBoss Repository used for Java EE 6 pieces -->
+		<repository>
+			<id>repository.jboss.org</id>
+			<name>JBoss Repository</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
 
-    <!-- third party libraries -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${servlet-api.version}</version>
-      <scope>provided</scope>
-    </dependency>
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>${jsp-api.version}</version>
-      <scope>provided</scope>
-    </dependency>
+	<build>
+		<finalName>spring-jsf-jpa</finalName>
+		<plugins>
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
+			<!-- Facilitates downloading source and javadoc in Eclipse -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
 
-  </dependencies>
+			<!-- Plugin to run and test through maven -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.25</version>
+				<configuration>
+					<scanIntervalSeconds>3</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+
+			<!-- Ensures we are compiling at 1.6 level -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- Tomcat plugin for embedded tomcat -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<path>/${project.build.finalName}</path>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>
